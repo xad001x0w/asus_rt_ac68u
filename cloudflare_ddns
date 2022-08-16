@@ -12,7 +12,13 @@ debug()
 
 debug "Executed as: $0 $@"
 
-CONFIG=$(dirname $0)/.cloudflare
+# check whether the script is symlink'd and if so use the absolute path for config
+LINKPATH=$(readlink -f $0)
+if [ "$LINKPATH" ]; then
+        CONFIG=$(dirname $LINKPATH)/.cloudflare
+else
+        CONFIG=$(dirname $0)/.cloudflare
+fi
 
 if [ -r $CONFIG ]; then
 	. $CONFIG
